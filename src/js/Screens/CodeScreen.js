@@ -1,0 +1,26 @@
+import React from 'react';
+import { StyleSheet} from 'react-native';
+import ImageBackground from 'react-native/Libraries/Image/ImageBackground';
+import ButtonComponent from '../Components/ButtonComponent';
+import TextInputComponent from '../Components/TextInputComponent';
+
+export default function MainScreen() {
+  return (
+    <>
+        <ImageBackground style = {styles.backGroundStyle} source = {require('../../../assets/ScreenBG.png')}>
+            <TextInputComponent editable = {false} value = '1234'/>
+            <ButtonComponent text = 'Copy Code' copyButton = {true}/>
+            <ButtonComponent text = 'Join Room' copyButton = {false}/>
+        </ImageBackground>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+    backGroundStyle:{
+        flex:1,
+        justifyContent:"flex-end",
+        alignItems:"center",
+        paddingBottom: 40
+    }
+})
