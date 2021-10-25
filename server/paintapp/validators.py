@@ -7,6 +7,10 @@ def validate_create_user(request):
 def validate_create_room(request):
     validation = serializers.RoomSerializer(data=request)
     return return_validator_body(validation)
+
+def validate_join_room(request):
+    validation = serializers.JoinRoomSerializer(data=request)
+    return return_validator_body(validation)
     
 
 def return_validator_body(validation):

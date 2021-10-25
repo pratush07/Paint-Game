@@ -15,7 +15,14 @@ class User(BaseModel):
 class Room(BaseModel):
     STATUS_CHOICE = (('CREATED','CREATED'), ('STARTED', 'STARTED'), ('TERMINATED', 'TERMINATED'))
 
-    user = models.ForeignKey(User, on_delete = models.CASCADE, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=True)
     name = models.CharField(max_length=30, null=False)
     status = models.CharField(max_length=12,choices=STATUS_CHOICE, default='CREATED')
     expiry = models.DateTimeField(null=True)
+
+class User_Room(BaseModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default='1')
+    #user_id = models.CharField(max_length=30, unique=True)
+    #room_id = models.CharField(max_length=30, unique=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
