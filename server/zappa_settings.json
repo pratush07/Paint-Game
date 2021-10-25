@@ -1,0 +1,16 @@
+{
+    "prod": {
+        "aws_region": "eu-west-1",
+        "django_settings": "server.settings",
+        "profile_name": "default",
+        "project_name": "server",
+        "runtime": "python3.8",
+        "keep_warm": false,
+        "manage_roles": false,
+        "s3_bucket": "zappa-giogzje73",
+        "role_name": "substitutionpro-prod-ZappaLambdaExecutionRole",
+        "role_arn": "arn:aws:iam::522389947314:role/substitutionpro-prod-ZappaLambdaExecutionRole",
+        "timeout_seconds": 120,
+        "cors": true
+    }
+}
