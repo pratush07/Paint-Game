@@ -40,17 +40,13 @@ def join_room(req_json={}, validation={}):
     room = None
 
     try:
-        #expiry = datetime.now() + timedelta(minutes=5)
-        test_user = User.objects.get(id=req_json['user_id'])
-        print(test_user.name)
         try:
-            test_room = Room.objects.get(id=req_json['room_id'])
-            print(test_room.name)
+            req_room = Room.objects.get(id=req_json['room_id'])
         except Exception as e:
-            return "NoRoom",ex #Temporary
-        user_room = User_Room(user=User.objects.get(id=req_json['user_id']),
-                              room=Room.objects.get(id=req_json['room_id'])
-                              )
+            ex = str(e)
+            return "NoRoom", ex
+        user_room = User_Room(user_id=req_json['user_id'],
+                              room_id=req_json['room_id'])
 
         user_room.save()
     except Exception as e:

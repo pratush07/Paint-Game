@@ -11,6 +11,7 @@ class BaseModel(models.Model):
 class User(BaseModel):
     name = models.CharField(max_length=30, null=False)
     mobile_num = models.CharField(max_length=15, unique=True)
+    #user = models.ForeignKey(User_Room, on_delete=models.CASCADE, unique=True)
 
 class Room(BaseModel):
     STATUS_CHOICE = (('CREATED','CREATED'), ('STARTED', 'STARTED'), ('TERMINATED', 'TERMINATED'))
@@ -21,8 +22,6 @@ class Room(BaseModel):
     expiry = models.DateTimeField(null=True)
 
 class User_Room(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default='1')
-    #user_id = models.CharField(max_length=30, unique=True)
-    #room_id = models.CharField(max_length=30, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
