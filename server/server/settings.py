@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-+sczkxt!s$#yq=be6@xn%agtj8yp$@j=x+2yrw1ul@7uj=5#a8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -80,6 +81,25 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# uncomment below to use for postgres
+
+# DB_NAME = os.environ.get("DB_NAME") if os.environ.get("DB_NAME") else 'xxx'
+# DB_USER = os.environ.get("DB_USER") if os.environ.get("DB_USER") else 'xxx'
+# DB_PASSWORD = os.environ.get("DB_PASSWORD") if os.environ.get("DB_PASSWORD") else ''
+# DB_HOST = os.environ.get("DB_HOST") if os.environ.get("DB_HOST") else 'localhost'
+# DB_PORT = os.environ.get("DB_PORT") if os.environ.get("DB_PORT") else '5432'
+
+# DATABASES = {
+# 'default': {
+# 'ENGINE': 'django.db.backends.postgresql',
+# 'NAME': DB_NAME,
+# 'USER': DB_USER,
+# 'PASSWORD': DB_PASSWORD,
+# 'HOST': DB_HOST,
+# 'PORT': DB_PORT,
+# }
+# }
 
 
 # Password validation
