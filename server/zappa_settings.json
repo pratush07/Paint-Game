@@ -7,9 +7,9 @@
         "runtime": "python3.8",
         "keep_warm": false,
         "manage_roles": false,
-        "s3_bucket": "zappa-giogzje73",
-        "role_name": "substitutionpro-prod-ZappaLambdaExecutionRole",
-        "role_arn": "arn:aws:iam::522389947314:role/substitutionpro-prod-ZappaLambdaExecutionRole",
+        "s3_bucket": "zappa-paintsplat",
+        "role_name": "paintsplat-prod-ZappaLambdaExecutionRole",
+        "role_arn": "arn:aws:iam::362228958007:role/paintsplat-prod-ZappaLambdaExecutionRole",
         "timeout_seconds": 120,
         "cors": true
     }
