@@ -39,9 +39,9 @@ const ScoreBoardList = () => {
 const styles = StyleSheet.create({
     container: {
         width: "28%",
-        height: "20%",
+        height: "5%",
         marginLeft: config.deviceWidth * 0.72,
-        marginTop: config.deviceHeight * 0.05,
+        marginTop: config.deviceHeight * 0.05
     },
     scoreBoardList: {
         flex: 1,
