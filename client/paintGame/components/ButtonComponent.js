@@ -1,26 +1,25 @@
-import React from 'react';
+import React from 'react'
 import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import { useFonts } from '@expo-google-fonts/inter';
 
-export default  ButtonComponent = (props) =>{
+const ButtonComponent = (props) => {
     let [fontsLoaded] = useFonts({
-        'Revalia-Regular':require('../assets/fonts/Revalia-Regular.ttf'),
-      });
-    if(!fontsLoaded)
-    {   return(
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={onPressLearnMore}>
-                <View style = {styles.buttonContainer}>
+        'Revalia-Regular': require('../assets/fonts/Revalia-Regular.ttf'),
+    });
+    if (!fontsLoaded) {
+        return (
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame)}>
+                <View style={styles.buttonContainer}>
                     <Text style={styles.text2}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
                 </View>
             </Pressable>
         )
-    } 
-    else
-    {
-        return(
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={onPressLearnMore}>
-                <View style = {styles.buttonContainer}>
+    }
+    else {
+        return (
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame)}>
+                <View style={styles.buttonContainer}>
                     <Text style={styles.text}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
                 </View>
@@ -28,21 +27,34 @@ export default  ButtonComponent = (props) =>{
         )
     }
 }
-renderCopyLogo = (copyButton) => 
-{
-    if(copyButton)
-    {
+renderCopyLogo = (copyButton) => {
+    if (copyButton) {
         //return <Text style = {[styles.text,{paddingLeft:10}]}>2</Text>
-        return (<Image style = {styles.logoStyle}
-        source={require('../assets/copyLogo.png')}
-       />)
+        return (<Image style={styles.logoStyle}
+            source={require('../assets/copyLogo.png')}
+        />)
     }
 }
-onPressLearnMore = () => {
-    console.log('Clicked from ButtonComponent..')
+onPressLearnMore = (text, navigation, toGame) => {
+    switch (text) {
+        case "Create Room":
+            // code for Room creation handler here
+            navigation.navigate("Code")
+            break;
+        case "Join Room":
+            if (toGame) {
+                // code for room joining check here
+                navigation.navigate("Game")
+            } else {
+                navigation.navigate("Join")
+            }         
+            break;
+        default:
+            break;
+    }
 }
 const styles = StyleSheet.create({
-    buttonStyle:{
+    buttonStyle: {
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
@@ -51,8 +63,8 @@ const styles = StyleSheet.create({
         elevation: 3,
         backgroundColor: '#2C6EAC',
         width: '80%',
-        height: 50 ,
-        margin:10
+        height: 50,
+        margin: 10
     },
     text: {
         fontSize: 18,
@@ -60,7 +72,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'white',
-        fontFamily:'Revalia-Regular',
+        fontFamily: 'Revalia-Regular',
     },
     text2: {
         fontSize: 18,
@@ -68,7 +80,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'white',
-        fontFamily:'Arial',
+        fontFamily: 'Arial',
     },
     buttonContainer: {
         flex: 1,
@@ -86,9 +98,11 @@ const styles = StyleSheet.create({
     },
     shadowProp: {
         shadowColor: '#171717',
-        shadowOffset: {width: 4, height: 6},
+        shadowOffset: { width: 4, height: 6 },
         shadowOpacity: 0.5,
         shadowRadius: 3,
     }
 
 });
+
+export default ButtonComponent;

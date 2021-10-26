@@ -4,12 +4,12 @@ import ImageBackground from 'react-native/Libraries/Image/ImageBackground';
 import ButtonComponent from '../components/ButtonComponent';
 import TextInputComponent from '../components/TextInputComponent';
 
-export default function MainScreen() {
+export default function MainScreen({navigation}) {
   return (
     <>
         <ImageBackground style = {styles.backGroundStyle} source = {require('../assets/ScreenBG.png')}>
             <TextInputComponent editable = {true}/>
-            <ButtonComponent text = 'Join Room' copyButton = {false}/>
+            <ButtonComponent text = 'Join Room' copyButton = {false} navigation={navigation} toGame={true} />
         </ImageBackground>
     </>
   );
