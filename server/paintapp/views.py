@@ -50,5 +50,3 @@ def join_room(req):
 
     # create a http response body
     return response.create_response_body(res=res, validation=validation, ex={'ex_req': ex_req , 'ex_db': ex_db})
-
-    #return JsonResponse({'status': 'success', 'message': 'room joined!'})

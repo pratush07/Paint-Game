@@ -11,7 +11,6 @@ class BaseModel(models.Model):
 class User(BaseModel):
     name = models.CharField(max_length=30, null=False)
     mobile_num = models.CharField(max_length=15, unique=True)
-    #user = models.ForeignKey(User_Room, on_delete=models.CASCADE, unique=True)
 
 class Room(BaseModel):
     STATUS_CHOICE = (('CREATED','CREATED'), ('STARTED', 'STARTED'), ('TERMINATED', 'TERMINATED'))

@@ -37,19 +37,11 @@ def join_room(req_json={}, validation={}):
         return None, None
 
     ex = None
-    room = None
+    user_room = None
 
     try:
-        try:
-            req_room = Room.objects.get(id=req_json['room_id'])
-        except Exception as e:
-            ex = str(e)
-            return "NoRoom", ex
-        user_room = User_Room(user_id=req_json['user_id'],
-                              room_id=req_json['room_id'])
-
-        user_room.save()
+        user_room, created = User_Room.objects.get_or_create(user_id=req_json['user_id'], room_id=req_json['room_id'])
     except Exception as e:
-        ex = str(e)
+        ex = str(e) + '( Room id and/or user id does not exist )'
     return user_room, ex
 
