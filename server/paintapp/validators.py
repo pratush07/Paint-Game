@@ -11,6 +11,10 @@ def validate_create_room(request):
 def validate_join_room(request):
     validation = serializers.JoinRoomSerializer(data=request)
     return return_validator_body(validation)
+
+def validate_update_coordinate(request):
+    validation = serializers.UpdateCoordinatesSerializer(data=request)
+    return return_validator_body(validation)
     
 
 def return_validator_body(validation):

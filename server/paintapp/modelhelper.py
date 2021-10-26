@@ -45,3 +45,18 @@ def join_room(req_json={}, validation={}):
         ex = str(e) + '( Room id and/or user id does not exist )'
     return user_room, ex
 
+def update_coordinate(req_json={}, validation={}):
+    if not validation['success']:
+        return None, None
+
+    ex = None
+    user_room = None
+
+    try:
+        user_coordinate = User_Coordinate(user_id = req_json['user_id'], room_id = req_json['room_id'], 
+        x = req_json['x'], y = req_json['y'])
+        user_coordinate.save()
+    except Exception as e:
+        ex = str(e)
+    return user_coordinate, ex
+

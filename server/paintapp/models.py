@@ -24,3 +24,12 @@ class User_Room(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
+class User_Coordinate(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    x = models.IntegerField()
+    y = models.IntegerField()
+
+    class Meta:
+        unique_together = ('room', 'x','y')
+

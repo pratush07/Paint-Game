@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^create/room/', views.create_room, name='create_room'),
     url(r'^create/user/', views.create_user, name='create_user'),
     url(r'^join/room/', views.join_room, name='join_room'),
+    url(r'^update/coordinate/', views.update_coordinates, name='update_coordinates'),
 ]

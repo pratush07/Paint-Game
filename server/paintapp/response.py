@@ -35,4 +35,11 @@ def join_room_success_response(user_room, ex_req, ex_db):
     if ex_req or ex_db or not user_room:
         return {}
 
-    return {'message': 'Room joined', 'room id': user_room.room_id, 'user id': user_room.user_id}
+    return {'message': 'Room joined', 'room_id': user_room.room_id, 'user_id': user_room.user_id}
+
+def update_coordinate_success_response(user_coordinate, ex_req, ex_db):
+    if ex_req or ex_db or not user_coordinate:
+        return {}
+
+    return {'message': 'Hit added', 'room_id': user_coordinate.room_id, 
+    'user_id': user_coordinate.user_id, 'x': user_coordinate.x, 'y': user_coordinate.y}

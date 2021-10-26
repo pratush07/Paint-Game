@@ -50,3 +50,19 @@ def join_room(req):
 
     # create a http response body
     return response.create_response_body(res=res, validation=validation, ex={'ex_req': ex_req , 'ex_db': ex_db})
+
+def update_coordinates(req):
+    # get the body of the request
+    req_json, ex_req = request.get_request_body(req)
+
+    # validate the response
+    validation = validators.validate_update_coordinate(req_json)
+
+    # create entry in the User_Score table
+    user_coordinate, ex_db = modelhelper.update_coordinate(req_json, validation)
+
+    # create a response message
+    res = response.update_coordinate_success_response(user_coordinate, ex_db, ex_req)
+
+    # create a http response body
+    return response.create_response_body(res=res, validation=validation, ex={'ex_req': ex_req , 'ex_db': ex_db})
