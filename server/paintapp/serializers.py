@@ -7,3 +7,7 @@ class UserSerializer(serializers.Serializer):
 class RoomSerializer(serializers.Serializer):
     user_id = serializers.IntegerField(required=True)
     name = serializers.CharField(max_length=30, required=True)
+
+class JoinRoomSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(required=True)
+    room_id = serializers.IntegerField(required=True)
