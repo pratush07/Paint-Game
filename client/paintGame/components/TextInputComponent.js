@@ -14,7 +14,7 @@ export default function TextInputComponent(props) {
       placeholder="Enter Room Code"
       keyboardType="numeric"
       editable = {props.editable}
-      value = {name}
+      value = {name ? name : props.value}
       onChangeText={value => {
           setName(value); 
           console.log(name)

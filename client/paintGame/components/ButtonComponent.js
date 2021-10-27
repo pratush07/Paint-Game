@@ -1,6 +1,8 @@
-import React from 'react'
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, Pressable, Image, Platform, ToastAndroid } from 'react-native';
 import { useFonts } from '@expo-google-fonts/inter';
+import * as Clipboard from 'expo-clipboard'
+import Toast from 'react-native-root-toast';
 
 const ButtonComponent = (props) => {
     let [fontsLoaded] = useFonts({
@@ -8,7 +10,7 @@ const ButtonComponent = (props) => {
     });
     if (!fontsLoaded) {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text2}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -18,7 +20,7 @@ const ButtonComponent = (props) => {
     }
     else {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -35,7 +37,7 @@ renderCopyLogo = (copyButton) => {
         />)
     }
 }
-onPressLearnMore = (text, navigation, toGame) => {
+onPressLearnMore = (text, navigation, toGame, randomText) => {
     switch (text) {
         case "Create Room":
             // code for Room creation handler here
@@ -47,7 +49,18 @@ onPressLearnMore = (text, navigation, toGame) => {
                 navigation.navigate("Game")
             } else {
                 navigation.navigate("Join")
-            }         
+            }
+            break;
+        case "Copy Code":
+            Clipboard.setString(randomText)
+            if (Platform.OS === 'ios') {
+                Toast.show(randomText + ' has been copyied!', {
+                    duration: Toast.durations.LONG
+                })
+            } else {
+                ToastAndroid.show(randomText + ' has been copyied!', ToastAndroid.LONG)
+            }
+            
             break;
         default:
             break;
