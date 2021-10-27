@@ -11,3 +11,12 @@ class RoomSerializer(serializers.Serializer):
 class JoinRoomSerializer(serializers.Serializer):
     user_id = serializers.IntegerField(required=True)
     room_id = serializers.IntegerField(required=True)
+
+class UpdateCoordinatesSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(required=True)
+    room_id = serializers.IntegerField(required=True)
+    x = serializers.IntegerField(required=True)
+    y = serializers.IntegerField(required=True)
+
+class RoomInfoSerializer(serializers.Serializer):
+    room_id = serializers.IntegerField(required=True)
