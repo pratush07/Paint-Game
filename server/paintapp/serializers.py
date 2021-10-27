@@ -17,3 +17,6 @@ class UpdateCoordinatesSerializer(serializers.Serializer):
     room_id = serializers.IntegerField(required=True)
     x = serializers.IntegerField(required=True)
     y = serializers.IntegerField(required=True)
+
+class RoomInfoSerializer(serializers.Serializer):
+    room_id = serializers.IntegerField(required=True)

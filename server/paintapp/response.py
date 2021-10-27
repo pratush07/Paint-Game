@@ -43,3 +43,9 @@ def update_coordinate_success_response(user_coordinate, ex_req, ex_db):
 
     return {'message': 'Hit added', 'room_id': user_coordinate.room_id, 
     'user_id': user_coordinate.user_id, 'x': user_coordinate.x, 'y': user_coordinate.y}
+
+def room_info_success_response(room_info, ex_req=None, ex_db=None):
+    if ex_req or ex_db or not room_info:
+        return {}
+
+    return {'message': 'Room info fetched', 'data': room_info}

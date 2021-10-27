@@ -66,3 +66,19 @@ def update_coordinates(req):
 
     # create a http response body
     return response.create_response_body(res=res, validation=validation, ex={'ex_req': ex_req , 'ex_db': ex_db})
+
+def info_room(req):
+     # get the body of the request
+    req_get = req.GET
+
+    # # validate the response
+    validation = validators.validate_room_info(req_get)
+
+    # # create entry in the User_Score table
+    user_coordinate, ex_db = modelhelper.get_room_info(req_get, validation)
+
+    # # create a response message
+    res = response.room_info_success_response(user_coordinate, ex_db)
+
+    # # create a http response body
+    return response.create_response_body(res=res, validation=validation, ex={'ex_req': None , 'ex_db': ex_db})
