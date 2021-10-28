@@ -69,11 +69,12 @@ def get_room_info(req_get={}, validation={}):
 
     try:
         user_coordinates = User_Coordinate.objects.filter(room_id = req_get['room_id']).values()
-        room_info = {}
+        room = Room.objects.get(id=req_get['room_id'])
+        room_info = {'status': room.status, 'data': {}}
         for user_c in user_coordinates:
-            if user_c['user_id'] not in room_info:
-                room_info[user_c['user_id']] = []
-            room_info[user_c['user_id']].append({'x': user_c['x'], 'y': user_c['y']})
+            if user_c['user_id'] not in room_info['data']:
+                room_info['data'][user_c['user_id']] = []
+            room_info['data'][user_c['user_id']].append({'x': user_c['x'], 'y': user_c['y']})
 
     except Exception as e:
         ex = str(e)
