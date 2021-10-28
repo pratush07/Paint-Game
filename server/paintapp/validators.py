@@ -32,6 +32,12 @@ def validate_get_user(request):
     validation = serializers.GetUserSerializer(data=request)
     return return_validator_body(validation)
 
+
+def validate_get_room(request):
+    validation = serializers.GetRoomSerializer(data=request)
+    return return_validator_body(validation)
+
+
 def return_validator_body(validation):
     res = {}
     res["success"] = True

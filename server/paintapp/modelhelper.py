@@ -124,3 +124,24 @@ def get_user(req_get={}, validation={}):
         ex = str(e)
     return user_id, ex
 
+
+def get_room(req_get={}, validation={}):
+    if not validation['success']:
+        return None, None
+
+    ex = None
+    room = None
+    room_id = None
+    room_name = None
+    topic = None
+    user_room = None
+
+    try:
+        user_room = User_Room.objects.get(user_id=req_get['user_id'])
+        room_id = getattr(user_room,'room_id')
+        room = Room.objects.get(id=room_id)
+        room_name = getattr(room, 'name')
+        topic = str(room_name)+'-'+str(room_id)
+    except Exception as e:
+        ex = str(e)
+    return room_id, room_name, topic, ex

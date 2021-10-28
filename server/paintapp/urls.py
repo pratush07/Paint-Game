@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^start/room/', views.start_room, name='start_room'),
     url(r'^end/room/', views.end_room, name='end_room'),
     url(r'^user/', views.get_user, name='get_user'),
+    url(r'^room/', views.get_room, name='get_room'),
 ]

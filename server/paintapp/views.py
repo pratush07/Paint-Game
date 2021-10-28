@@ -134,7 +134,7 @@ def end_room(req):
     return response.create_response_body(res=res, validation=validation, ex={'ex_req': ex_req , 'ex_db': ex_db})
 
 def get_user(req):
-    #print(req.GET.get('mobile_num',''))
+
     # get the body of the request
     req_get = req.GET
 
@@ -150,5 +150,19 @@ def get_user(req):
     # # create a http response body
     return response.create_response_body(res=res, validation=validation, ex={'ex_req': None , 'ex_db': ex_db})
 
-    #data = {'message':'user'}
-    #return HttpResponse(data, content_type='application/json')
+
+def get_room(req):
+    # get the body of the request
+    req_get = req.GET
+
+    # # validate the response
+    validation = validators.validate_get_room(req_get)
+
+    # # Retrieve room id and room name from User_Room table
+    room_id, room_name, topic, ex_db = modelhelper.get_room(req_get, validation)
+
+    # # create a response message
+    res = response.get_room_success_response(room_id, room_name, topic, ex_db)
+
+    # # create a http response body
+    return response.create_response_body(res=res, validation=validation, ex={'ex_req': None, 'ex_db': ex_db})

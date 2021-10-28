@@ -29,3 +29,6 @@ class EndRoomSerializer(serializers.Serializer):
 
 class GetUserSerializer(serializers.Serializer):
     mobile_num = serializers.IntegerField(required=True)
+
+class GetRoomSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(required=True)
