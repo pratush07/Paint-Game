@@ -6,21 +6,44 @@ import config from '../tools/dimensons'
 import BoardComponent from '../components/BoardComponent'
 import DotComponent from '../components/DotComponent'
 import React, { Component } from 'react'
-//import SafeArea from 'react-native-safe-area'
 
 export default class GameScreen extends Component {
 
     constructor(props){
         super(props);
-        // SafeArea.getSafeAreaInsetsForRootView()
-        // .then((result) => {
-        // console.log('SafeArea:'+result)
-        // // { safeAreaInsets: { top: 44, left: 0, bottom: 34, right: 0 } }
-        // })
+        this.imageClicked = this.imageClicked.bind(this)
+        this.fireClicked = this.fireClicked.bind(this)
         this.state ={
             dotX:0,
-            dotY:0
+            dotY:0,
+            boardX:50,
+            boardY:0,
+            boardPoints: []
         };
+    }
+    fireClicked = () =>
+    {
+        cursorPoint = [this.state.dotX,this.state.dotY]
+        boardCord = [this.state.boardX,this.state.boardY]
+        boardWidth = config.boardWidth
+        boardHeight = config.boardHeight
+
+        if(cursorPoint[0] > boardCord[0] && cursorPoint[0] < (boardCord[0]+ Math.floor(boardWidth))
+            && cursorPoint[1] > boardCord[1] && cursorPoint[1] < (boardCord[1]+ boardHeight))
+            {
+                markonBoardX = cursorPoint[0] - boardCord[0];
+                markonBoardY = cursorPoint[1] - boardCord[1];
+                this.setState({boardPoints:this.state.boardPoints.concat([{x:markonBoardX,y:markonBoardY}])})
+            }
+    }
+    getBoardCordinates = (Cord,boardDim) => 
+    {
+        this.setState({
+            boardX:Cord[1],
+            boardY:Cord[0],
+            boardWidth:boardDim[0],
+            boardHeight:boardDim[1]
+        })
     }
     imageClicked = (direction) =>
     {
@@ -37,7 +60,6 @@ export default class GameScreen extends Component {
                     dotY-=10;
                 break;
             case "right":
-                console.log('config.deviceWidth'+config.deviceWidth+',DotX:'+dotX)
                 if(dotX+10<config.deviceWidth)
                     dotX+=10;
                 break;
@@ -58,13 +80,13 @@ export default class GameScreen extends Component {
         <View style={styles.screenContainer}>
             <ScoreBoardList />
             <View style = {styles.boardContainer}>
-                <BoardComponent />
+                <BoardComponent getBoardCordinates = {this.getBoardCordinates} boardPoints = {this.state.boardPoints.length>0?this.state.boardPoints:[]}/>
+                <DotComponent dotX = {this.state.dotX} dotY = {this.state.dotY} />
             </View>
-            <DotComponent dotX = {this.state.dotX} dotY = {this.state.dotY} topic="room1" room_id="1" eventType="TRY" user_id={1} />
             <View style={styles.panels}>
                 <ControlPanel direction={"up"} clicked={this.imageClicked}/>
                 <ControlPanel direction={"down"} clicked={this.imageClicked}/>
-                <FirePanel />
+                <FirePanel clicked = {this.fireClicked}/>
                 <ControlPanel direction={"left"} clicked={this.imageClicked}/>
                 <ControlPanel direction={"right"} clicked={this.imageClicked}/>
             </View>

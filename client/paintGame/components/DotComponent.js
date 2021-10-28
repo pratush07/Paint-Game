@@ -7,8 +7,8 @@ export default class DotComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
-            x:0,
-            y:0
+            x:200,
+            y:200
         }
     }
     // _onLayoutEvent = (event) =>

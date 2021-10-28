@@ -36,7 +36,11 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-web": "~0.13.12",
     "readable-stream": "1.0.33",
+<<<<<<< HEAD
     "stream": "^0.0.2",
+=======
+    "rn-nodeify": "^10.3.0",
+>>>>>>> 0c7a01521c077edbda953d8527e8e462c5088b7c
     "stream-browserify": "^1.0.0",
     "url": "~0.10.1",
     "util": "~0.10.3"
