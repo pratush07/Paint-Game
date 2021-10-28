@@ -9,6 +9,7 @@ import React, { Component } from 'react'
 //import SafeArea from 'react-native-safe-area'
 
 export default class GameScreen extends Component {
+
     constructor(props){
         super(props);
         // SafeArea.getSafeAreaInsetsForRootView()
@@ -59,7 +60,7 @@ export default class GameScreen extends Component {
             <View style = {styles.boardContainer}>
                 <BoardComponent />
             </View>
-            <DotComponent dotX = {this.state.dotX} dotY = {this.state.dotY} />
+            <DotComponent dotX = {this.state.dotX} dotY = {this.state.dotY} topic="room1" room_id="1" eventType="TRY" user_id={1} />
             <View style={styles.panels}>
                 <ControlPanel direction={"up"} clicked={this.imageClicked}/>
                 <ControlPanel direction={"down"} clicked={this.imageClicked}/>

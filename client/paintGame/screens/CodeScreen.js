@@ -3,12 +3,18 @@ import { StyleSheet} from 'react-native';
 import ImageBackground from 'react-native/Libraries/Image/ImageBackground';
 import ButtonComponent from '../components/ButtonComponent';
 import TextInputComponent from '../components/TextInputComponent';
+import IoT from '../config/IoT'
 
 export default function MainScreen({navigation}) {
-  const [randomText, setRandomText] = useState("")
+  const [roomId, setRoomId] = useState("")
   useEffect(() => {
-    setRandomText("" + (Math.floor(Math.random() * (9999 - 1000)) + 1000))
-    console.log(randomText)
+    // code for creating room
+    // code for getting room info
+
+    IoT.on('connect', () => {
+      console.log('userid' + 'has connected...')
+      IoT.subscribe('topic_id')
+    })
   }, [])
   return (
     <>

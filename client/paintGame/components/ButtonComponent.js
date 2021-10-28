@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Pressable, Image, Platform, ToastAndroid } from
 import { useFonts } from '@expo-google-fonts/inter';
 import * as Clipboard from 'expo-clipboard'
 import Toast from 'react-native-root-toast';
+import IoT from '../config/IoT'
 
 const ButtonComponent = (props) => {
     let [fontsLoaded] = useFonts({
@@ -46,6 +47,12 @@ onPressLearnMore = (text, navigation, toGame, randomText) => {
         case "Join Room":
             if (toGame) {
                 // code for room joining check here
+                // get room
+                // if room status is started
+                IoT.on('connect', () => {
+                    console.log('userid' + 'has connected...')
+                    IoT.subscribe('topic_id')
+                })
                 navigation.navigate("Game")
             } else {
                 navigation.navigate("Join")
