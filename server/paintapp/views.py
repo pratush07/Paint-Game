@@ -109,10 +109,10 @@ def start_room(req):
     validation = validators.validate_start_room(req_json)
 
     # update entry in the Room table
-    room, ex_db = modelhelper.start_room(req_json, validation)
+    room,user_colours, ex_db = modelhelper.start_room(req_json, validation)
 
     # create a response message
-    res = response.start_room_success_response(room, ex_db, ex_req)
+    res = response.start_room_success_response(room, user_colours, ex_db, ex_req)
 
     # create a http response body
     return response.create_response_body(res=res, validation=validation, ex={'ex_req': ex_req , 'ex_db': ex_db})

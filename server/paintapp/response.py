@@ -50,11 +50,11 @@ def room_info_success_response(room_info, ex_req=None, ex_db=None):
 
     return {'message': 'Room info fetched', 'data': room_info}
 
-def start_room_success_response(room, ex_db, ex_req):
+def start_room_success_response(room,user_colours, ex_db, ex_req):
     if ex_req or ex_db or not room:
         return {}
 
-    return {'message': 'Game started'}
+    return {'message': 'Game started', 'colors' : user_colours}
 
 def end_room_success_response(room, ex_db, ex_req):
     if ex_req or ex_db or not room:
