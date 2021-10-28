@@ -54,9 +54,13 @@ def update_coordinate(req_json={}, validation={}):
     user_coordinate = None
 
     try:
+        # check if user has joined
+        User_Room.objects.filter(user_id = req_json['user_id'], room_id = req_json['room_id'])
+        # add coordinate
         user_coordinate = User_Coordinate(user_id = req_json['user_id'], room_id = req_json['room_id'], 
         x = req_json['x'], y = req_json['y'])
         user_coordinate.save()
+        
     except Exception as e:
         ex = str(e)
     return user_coordinate, ex
@@ -70,12 +74,13 @@ def get_room_info(req_get={}, validation={}):
 
     try:
         user_coordinates = User_Coordinate.objects.filter(room_id = req_get['room_id']).values()
+        user_rooms = User_Room.objects.filter(room_id = req_get['room_id'])
         room = Room.objects.get(id=req_get['room_id'])
-        room_info = {'status': room.status, 'data': {}}
+        room_info = {'status': room.status, 'coordinates': {}, "user_ids": [ user_room.user.id for user_room in user_rooms]}
         for user_c in user_coordinates:
-            if user_c['user_id'] not in room_info['data']:
-                room_info['data'][user_c['user_id']] = []
-            room_info['data'][user_c['user_id']].append({'x': user_c['x'], 'y': user_c['y']})
+            if user_c['user_id'] not in room_info['coordinates']:
+                room_info['coordinates'][user_c['user_id']] = []
+            room_info['coordinates'][user_c['user_id']].append({'x': user_c['x'], 'y': user_c['y']})
 
     except Exception as e:
         ex = str(e)
