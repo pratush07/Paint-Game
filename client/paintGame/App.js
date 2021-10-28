@@ -1,12 +1,13 @@
 import './shim';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Pressable, ImageBackground } from 'react-native';
 import GameScreen from './screens/gameScreen'
 import MainScreen from './screens/MainScreen';
 import JoinScreen from './screens/JoinScreen';
 import CodeScreen from './screens/CodeScreen';
+import StartScreen from './screens/startScreen';
 import IoT from './config/IoT';
 
 import { NavigationContainer } from '@react-navigation/native'
@@ -15,13 +16,11 @@ import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
 
 export default function App() {
+  const [userId, setUserId] = useState(0)
   img = require('./assets/ScreenBG.png')
   useEffect(() => {
-    IoT
-  .on('connect', function() {
-    console.log('connect');
-  });
-  }, [])
+    console.log(userId)
+  }, [userId])
   return (
     <NavigationContainer style={styles.container}>
       <Stack.Navigator 
@@ -29,6 +28,7 @@ export default function App() {
           headerShown: false
         }}
         >
+        <Stack.Screen name="Login" component={StartScreen} setUserId={setUserId} />
         <Stack.Screen name="Main" component={MainScreen} />
         <Stack.Screen name="Join" component={JoinScreen} />
         <Stack.Screen name="Code" component={CodeScreen} />

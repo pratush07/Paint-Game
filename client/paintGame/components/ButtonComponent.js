@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Pressable, Image, Platform, ToastAndroid } from
 import { useFonts } from '@expo-google-fonts/inter';
 import * as Clipboard from 'expo-clipboard'
 import Toast from 'react-native-root-toast';
+// import IoT from '../config/IoT'
 
 const ButtonComponent = (props) => {
     let [fontsLoaded] = useFonts({
@@ -10,7 +11,7 @@ const ButtonComponent = (props) => {
     });
     if (!fontsLoaded) {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.roomId)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text2}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -20,7 +21,7 @@ const ButtonComponent = (props) => {
     }
     else {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.roomId)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -37,7 +38,7 @@ renderCopyLogo = (copyButton) => {
         />)
     }
 }
-onPressLearnMore = (text, navigation, toGame, randomText) => {
+onPressLearnMore = (text, navigation, toGame, roomId) => {
     switch (text) {
         case "Create Room":
             // code for Room creation handler here
@@ -52,13 +53,13 @@ onPressLearnMore = (text, navigation, toGame, randomText) => {
             }
             break;
         case "Copy Code":
-            Clipboard.setString(randomText)
+            Clipboard.setString(roomId)
             if (Platform.OS === 'ios') {
-                Toast.show(randomText + ' has been copyied!', {
+                Toast.show(roomId + ' has been copyied!', {
                     duration: Toast.durations.LONG
                 })
             } else {
-                ToastAndroid.show(randomText + ' has been copyied!', ToastAndroid.LONG)
+                ToastAndroid.show(roomId + ' has been copyied!', ToastAndroid.LONG)
             }
             
             break;
