@@ -76,7 +76,7 @@ def get_room_info(req_get={}, validation={}):
         user_coordinates = User_Coordinate.objects.filter(room_id = req_get['room_id']).values()
         user_rooms = User_Room.objects.filter(room_id = req_get['room_id'])
         room = Room.objects.get(id=req_get['room_id'])
-        room_info = {'status': room.status, 'coordinates': {}, "user_ids": [ user_room.user.id for user_room in user_rooms]}
+        room_info = {'status': room.status, 'coordinates': {}, "user_info": [ {user_room.user.id : user_room.color} for user_room in user_rooms]}
         for user_c in user_coordinates:
             if user_c['user_id'] not in room_info['coordinates']:
                 room_info['coordinates'][user_c['user_id']] = []
@@ -92,18 +92,9 @@ def start_room(req_json={}, validation={}):
 
     ex = None
     room = None
-    user_ids = None
-    r = None
     user_colours = {}
-    color = None
     try:
-        user_rooms = User_Room.objects.filter(room_id=req_json['room_id'])
-        for entry in user_rooms:
-            r = lambda: random.randint(0, 255)
-            color = '#%02X%02X%02X' % (r(),r(),r())
-            entry.color= color
-            entry.save()
-            user_colours[entry.user_id]=color
+        user_colours = assign_colors(req_json)
         room = Room.objects.get(id=req_json['room_id'])
         room.status = 'STARTED'
         room.save()
@@ -162,3 +153,15 @@ def get_room(req_get={}, validation={}):
     except Exception as e:
         ex = str(e)
     return room_id, room_name, topic, ex
+
+def assign_colors(req_json):
+    user_colours = {}
+    user_rooms = User_Room.objects.filter(room_id=req_json['room_id'])
+    for entry in user_rooms:
+        r = lambda: random.randint(0, 255)
+        color = '#%02X%02X%02X' % (r(),r(),r())
+        entry.color= color
+        entry.save()
+        user_colours[entry.user_id]=color
+    
+    return user_colours
