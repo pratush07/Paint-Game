@@ -78,3 +78,49 @@ def get_room_info(req_get={}, validation={}):
     except Exception as e:
         ex = str(e)
     return room_info, ex
+
+def start_room(req_json={}, validation={}):
+    if not validation['success']:
+        return None, None
+
+    ex = None
+    room = None
+
+    try:
+        room = Room.objects.get(id=req_json['room_id'])
+        room.status = 'STARTED'
+        room.save()
+    except Exception as e:
+        ex = str(e) + '( Error starting game )'
+    return room, ex
+
+def end_room(req_json={}, validation={}):
+    if not validation['success']:
+        return None, None
+
+    ex = None
+    room = None
+
+    try:
+        room = Room.objects.get(id=req_json['room_id'])
+        room.status = 'TERMINATED'
+        room.save()
+    except Exception as e:
+        ex = str(e) + '( Error ending game )'
+    return room, ex
+
+def get_user(req_get={}, validation={}):
+    if not validation['success']:
+        return None, None
+
+    ex = None
+    user = None
+    user_id = None
+
+    try:
+        user = User.objects.get(mobile_num=req_get['mobile_num'])
+        user_id = getattr(user,'id')
+    except Exception as e:
+        ex = str(e)
+    return user_id, ex
+

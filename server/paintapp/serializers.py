@@ -20,3 +20,12 @@ class UpdateCoordinatesSerializer(serializers.Serializer):
 
 class RoomInfoSerializer(serializers.Serializer):
     room_id = serializers.IntegerField(required=True)
+
+class StartRoomSerializer(serializers.Serializer):
+    room_id = serializers.IntegerField(required=True)
+
+class EndRoomSerializer(serializers.Serializer):
+    room_id = serializers.IntegerField(required=True)
+
+class GetUserSerializer(serializers.Serializer):
+    mobile_num = serializers.IntegerField(required=True)

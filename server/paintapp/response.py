@@ -49,3 +49,21 @@ def room_info_success_response(room_info, ex_req=None, ex_db=None):
         return {}
 
     return {'message': 'Room info fetched', 'data': room_info}
+
+def start_room_success_response(room, ex_db, ex_req):
+    if ex_req or ex_db or not room:
+        return {}
+
+    return {'message': 'Game started'}
+
+def end_room_success_response(room, ex_db, ex_req):
+    if ex_req or ex_db or not room:
+        return {}
+
+    return {'message': 'Game terminated'}
+
+def get_user_success_response(user_id, ex_req=None, ex_db=None):
+    if ex_req or ex_db or not user_id:
+        return {}
+
+    return {'message': 'User Found', 'id': user_id}
