@@ -49,10 +49,8 @@ onPressLearnMore = (text, navigation, toGame, randomText) => {
                 // code for room joining check here
                 // get room
                 // if room status is started
-                IoT.on('connect', () => {
-                    console.log('userid' + 'has connected...')
-                    IoT.subscribe('topic_id')
-                })
+            
+                IoT.subscribe('roomtest-28')
                 navigation.navigate("Game")
             } else {
                 navigation.navigate("Join")

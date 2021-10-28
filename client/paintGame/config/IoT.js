@@ -13,18 +13,13 @@ const device = awsIot.device({
 })
 
 // use the exported device to access the following functions in the game component.
-// device.on('connect', function () {
-//     console.log('Connected');
-//     device.subscribe('example-topic');
-//   });
+device.on('connect', function () {
+    console.log('Connected');
+});
   
-// device.on('error', function (err) {
-//   console.log('Error', err);
-// });
+device.on('error', function (err) {
+  console.log('Error', err);
+});
 
-// device.on('message', function (topic, payload) {
-//   const msg = JSON.parse(payload.toString());
-//   console.log('Message', topic, msg);
-// });
 
 export default device

@@ -6,21 +6,21 @@ import TextInputComponent from '../components/TextInputComponent';
 import IoT from '../config/IoT'
 
 export default function MainScreen({navigation}) {
-  const [roomId, setRoomId] = useState("")
+  const [roomId, setRoomId] = useState("28")
   useEffect(() => {
     // code for creating room
     // code for getting room info
-
-    IoT.on('connect', () => {
-      console.log('userid' + 'has connected...')
-      IoT.subscribe('topic_id')
+    console.log("here!!!!")
+    IoT.subscribe("roomtest-28")
+    IoT.on('message', (topic, load) => {
+      console.log(topic)
     })
   }, [])
   return (
     <>
         <ImageBackground style = {styles.backGroundStyle} source = {require('../assets/ScreenBG.png')}>
-            <TextInputComponent editable = {false} value = {randomText} />
-            <ButtonComponent text = 'Copy Code' copyButton = {true} randomText={randomText}/>
+            <TextInputComponent editable = {false} value = {roomId} />
+            <ButtonComponent text = 'Copy Code' copyButton = {true} randomText={roomId}/>
             <ButtonComponent text = 'Join Room' copyButton = {false} navigation={navigation} />
         </ImageBackground>
     </>
