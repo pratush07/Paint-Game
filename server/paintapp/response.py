@@ -35,4 +35,41 @@ def join_room_success_response(user_room, ex_req, ex_db):
     if ex_req or ex_db or not user_room:
         return {}
 
-    return {'message': 'Room joined', 'room id': user_room.room_id, 'user id': user_room.user_id}
+    return {'message': 'Room joined', 'room_id': user_room.room_id, 'user_id': user_room.user_id}
+
+def update_coordinate_success_response(user_coordinate, ex_req, ex_db):
+    if ex_req or ex_db or not user_coordinate:
+        return {}
+
+    return {'message': 'Hit added', 'room_id': user_coordinate.room_id, 
+    'user_id': user_coordinate.user_id, 'x': user_coordinate.x, 'y': user_coordinate.y}
+
+def room_info_success_response(room_info, ex_req=None, ex_db=None):
+    if ex_req or ex_db or not room_info:
+        return {}
+
+    return {'message': 'Room info fetched', 'data': room_info}
+
+def start_room_success_response(room,user_colours, ex_db, ex_req):
+    if ex_req or ex_db or not room:
+        return {}
+
+    return {'message': 'Game started', 'colors' : user_colours}
+
+def end_room_success_response(room, ex_db, ex_req):
+    if ex_req or ex_db or not room:
+        return {}
+
+    return {'message': 'Game terminated'}
+
+def get_user_success_response(user_id, ex_req=None, ex_db=None):
+    if ex_req or ex_db or not user_id:
+        return {}
+
+    return {'message': 'User Found', 'id': user_id}
+
+def get_room_success_response(room_id, room_name, topic, ex_req=None, ex_db=None):
+    if ex_req or ex_db or not room_id or not room_name or not topic:
+        return {}
+
+    return {'message': 'Room Found', 'id': room_id, 'Name': room_name, 'Topic': topic}
