@@ -23,6 +23,7 @@ class Room(BaseModel):
 class User_Room(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    color = models.CharField(max_length=7, unique=True)
 
 class User_Coordinate(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

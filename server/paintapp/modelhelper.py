@@ -1,5 +1,6 @@
 from .models import *
 from datetime import datetime, timedelta
+import random
 
 def create_user(req_json={}, validation = {}):
     if not validation['success']:
@@ -86,14 +87,24 @@ def start_room(req_json={}, validation={}):
 
     ex = None
     room = None
-
+    user_ids = None
+    r = None
+    user_colours = {}
+    color = None
     try:
+        user_rooms = User_Room.objects.filter(room_id=req_json['room_id'])
+        for entry in user_rooms:
+            r = lambda: random.randint(0, 255)
+            color = '#%02X%02X%02X' % (r(),r(),r())
+            entry.color= color
+            entry.save()
+            user_colours[entry.user_id]=color
         room = Room.objects.get(id=req_json['room_id'])
         room.status = 'STARTED'
         room.save()
     except Exception as e:
         ex = str(e) + '( Error starting game )'
-    return room, ex
+    return room,user_colours, ex
 
 def end_room(req_json={}, validation={}):
     if not validation['success']:
