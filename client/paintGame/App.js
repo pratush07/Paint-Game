@@ -1,7 +1,7 @@
 import './shim';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Pressable, ImageBackground } from 'react-native';
 import GameScreen from './screens/gameScreen'
 import MainScreen from './screens/MainScreen';
@@ -16,6 +16,12 @@ const Stack = createStackNavigator()
 
 export default function App() {
   img = require('./assets/ScreenBG.png')
+  useEffect(() => {
+    IoT
+  .on('connect', function() {
+    console.log('connect');
+  });
+  }, [])
   return (
     <NavigationContainer style={styles.container}>
       <Stack.Navigator 
