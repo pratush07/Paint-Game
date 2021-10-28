@@ -1,36 +1,56 @@
-import React from 'react'
-import { StyleSheet, Image } from 'react-native'
+import React, { Component } from 'react'
+import { StyleSheet, Image, Pressable } from 'react-native'
 import config from '../tools/dimensons'
 
-const ControlPanel = ({ direction }) => {
-    switch (direction) {
+
+export default class gameScreen extends Component {
+    constructor(props)
+    {
+        super(props);
+        this.imageClicked = this.imageClicked.bind(this);
+    }
+    imageClicked = (direction) => 
+    {   
+        this.props.clicked(direction)
+    }
+  render() {
+    switch (this.props.direction) {
         case "left":
             return (
-                <Image
-                source={require('../assets/ArrrowButtonLeft.png')}
-              />
+                <Pressable onPress = {() => {this.imageClicked('left')}}>
+                    <Image
+                        source={require('../assets/ArrrowButtonLeft.png')}
+                    />
+                </Pressable>
             )  
         case "up":
             return (
-                <Image
-                source={require('../assets/ArrrowButtonUp.png')}
-              />
+                <Pressable onPress = {() =>this.imageClicked('up')}>
+                    <Image
+                        source={require('../assets/ArrrowButtonUp.png')}
+                    />
+                </Pressable>
             )
         case "right":
             return (
-                <Image
-                source={require('../assets/ArrrowButtonRight.png')}
-              />
+                <Pressable onPress = {() => this.imageClicked('right')}>
+                    <Image
+                         source={require('../assets/ArrrowButtonRight.png')}
+                    />
+                </Pressable>
             )
         case "down":
             return (
-                <Image
-                source={require('../assets/ArrrowButtonDown.png')}
-              />
+                <Pressable onPress = {() => this.imageClicked('down')}>
+                    <Image
+                         source={require('../assets/ArrrowButtonDown.png')}
+                    />
+                </Pressable>
             )
         default:
             break
     }
+  }
 }
 
 const styles = StyleSheet.create({
@@ -41,4 +61,3 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ControlPanel

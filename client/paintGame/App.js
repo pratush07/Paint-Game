@@ -1,3 +1,4 @@
+import './shim';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler';
 import React from 'react';
@@ -5,7 +6,8 @@ import { StyleSheet, Text, View, Button, Pressable, ImageBackground } from 'reac
 import GameScreen from './screens/gameScreen'
 import MainScreen from './screens/MainScreen';
 import JoinScreen from './screens/JoinScreen';
-import CodeScreen from './screens/CodeScreen'
+import CodeScreen from './screens/CodeScreen';
+import IoT from './config/IoT';
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
