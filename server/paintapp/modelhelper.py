@@ -127,7 +127,7 @@ def get_user(req_get={}, validation={}):
 
 def get_room(req_get={}, validation={}):
     if not validation['success']:
-        return None, None
+        return None, None, None, None
 
     ex = None
     room = None
