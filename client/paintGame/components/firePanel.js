@@ -1,13 +1,13 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import {Image, Pressable } from 'react-native'
 
-const FirePanel = () => {
+const FirePanel = (props) => {
     return (
-        <View>
+        <Pressable onPress = {props.clicked}>
             <Image
                 source={require('../assets/ButtonFire.png')}
-              />
-        </View>
+            />
+        </Pressable>
     )
 }
 

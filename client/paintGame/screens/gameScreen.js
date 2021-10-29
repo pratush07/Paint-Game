@@ -6,89 +6,142 @@ import config from '../tools/dimensons'
 import BoardComponent from '../components/BoardComponent'
 import DotComponent from '../components/DotComponent'
 import React, { Component } from 'react'
-//import SafeArea from 'react-native-safe-area'
+import IoT from '../config/IoT'
+import axios from 'axios'
 
 export default class GameScreen extends Component {
-    constructor(props){
+
+    constructor(props) {
         super(props);
-        // SafeArea.getSafeAreaInsetsForRootView()
-        // .then((result) => {
-        // console.log('SafeArea:'+result)
-        // // { safeAreaInsets: { top: 44, left: 0, bottom: 34, right: 0 } }
-        // })
-        this.state ={
-            dotX:0,
-            dotY:0
+        this.imageClicked = this.imageClicked.bind(this)
+        this.fireClicked = this.fireClicked.bind(this)
+        this.state = {
+            dotX: 0,
+            dotY: 0,
+            boardX: 50,
+            boardY: 0,
+            boardPoints: [],
+            userInfo: []
         };
     }
-    imageClicked = (direction) =>
-    {
+    componentDidMount() {
+        console.log("TopicID in GameScreen:"+this.props.route.params.topicId)
+        axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room",{
+            params:{room_id: this.props.route.params.roomID}
+        })
+        .then(response =>{
+            this.setState({userInfo:response.data.data.user_info})
+        })
+
+    }
+    fireClicked = () => {
+        cursorPoint = [this.state.dotX, this.state.dotY]
+        boardCord = [this.state.boardX, this.state.boardY]
+        boardWidth = config.boardWidth
+        boardHeight = config.boardHeight
+        
+        if (cursorPoint[0] > boardCord[0] && cursorPoint[0] < (boardCord[0] + Math.floor(boardWidth))
+            && cursorPoint[1] > boardCord[1] && cursorPoint[1] < (boardCord[1] + boardHeight)) {
+            markonBoardX = cursorPoint[0] - boardCord[0];
+            markonBoardY = cursorPoint[1] - boardCord[1];
+            // add publish
+            IoT.publish(
+                this.props.route.params.topicId,
+                JSON.stringify({
+                    topic: this.props.route.params.topicId,
+                    room_id: this.props.route.params.roomID,
+                    eventType: "TRY",
+                    user_id: this.props.route.params.userID,
+                    x: markonBoardX,
+                    y: markonBoardY,
+                    timestamp: Date.now()
+                })
+            )
+            IoT.on('message', (topic, payload) => {
+                const json_payload = JSON.parse(payload.toString())
+                console.log(json_payload)
+                if (json_payload.eventType === 'HIT') {
+                    this.setState({ boardPoints: this.state.boardPoints.concat([{ x: json_payload.x, y: json_payload.y }]) })
+                } 
+                if (json_payload.eventType === 'MISS') {
+
+                }
+            })
+        }
+    }
+    getBoardCordinates = (Cord, boardDim) => {
+        this.setState({
+            boardX: Cord[1],
+            boardY: Cord[0],
+            boardWidth: boardDim[0],
+            boardHeight: boardDim[1]
+        })
+    }
+    imageClicked = (direction) => {
         dotX = this.state.dotX;
         dotY = this.state.dotY;
-        switch (direction) 
-        {
+        switch (direction) {
             case "left":
-                if(dotX-10>0)
-                    dotX-=10;
+                if (dotX - 10 > 0)
+                    dotX -= 10;
                 break;
             case "up":
-                if(dotY-10>0)
-                    dotY-=10;
+                if (dotY - 10 > 0)
+                    dotY -= 10;
                 break;
             case "right":
-                console.log('config.deviceWidth'+config.deviceWidth+',DotX:'+dotX)
-                if(dotX+10<config.deviceWidth)
-                    dotX+=10;
+                if (dotX + 10 < config.deviceWidth)
+                    dotX += 10;
                 break;
             case "down":
-                if(dotY+10<config.deviceHeight)
-                    dotY+=10;
+                if (dotY + 10 < config.deviceHeight)
+                    dotY += 10;
                 break;
             default:
                 break
         }
         this.setState({
-            dotX:dotX,
-            dotY:dotY
+            dotX: dotX,
+            dotY: dotY
         })
     }
     render() {
-    return (
-        <View style={styles.screenContainer}>
-            <ScoreBoardList />
-            <View style = {styles.boardContainer}>
-                <BoardComponent />
+        return (
+            <View style={styles.screenContainer}>
+                <ScoreBoardList userInfo = {this.state.userInfo}/>
+                <View style={styles.boardContainer}>
+                    <BoardComponent getBoardCordinates={this.getBoardCordinates} userInfo = {this.state.userInfo} boardPoints={this.state.boardPoints.length > 0 ? this.state.boardPoints : []} />
+                    {this.state.userInfo.length>0 ? <DotComponent dotX={this.state.dotX} dotY={this.state.dotY} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} /> : (<></>)}
+                </View>
+                <View style={styles.panels}>
+                    <ControlPanel direction={"up"} clicked={this.imageClicked} />
+                    <ControlPanel direction={"down"} clicked={this.imageClicked} />
+                    <FirePanel clicked={this.fireClicked} />
+                    <ControlPanel direction={"left"} clicked={this.imageClicked} />
+                    <ControlPanel direction={"right"} clicked={this.imageClicked} />
+                </View>
             </View>
-            <DotComponent dotX = {this.state.dotX} dotY = {this.state.dotY} />
-            <View style={styles.panels}>
-                <ControlPanel direction={"up"} clicked={this.imageClicked}/>
-                <ControlPanel direction={"down"} clicked={this.imageClicked}/>
-                <FirePanel />
-                <ControlPanel direction={"left"} clicked={this.imageClicked}/>
-                <ControlPanel direction={"right"} clicked={this.imageClicked}/>
-            </View>
-        </View>
-    )
-  }
+        )
+    }
 }
 const styles = StyleSheet.create({
     panels: {
-        position:'absolute',
+        position: 'absolute',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: "space-evenly",
         top: config.deviceHeight - config.deviceHeight * 0.1
     },
     boardContainer: {
-        backgroundColor:'#8fb4e1', 
-        height:'78%', 
-        marginTop:'3%', 
-        marginLeft:'2%',
-        marginRight:'2%'
+        backgroundColor: '#8fb4e1',
+        height: '78%',
+        marginTop: '3%',
+        marginLeft: '2%',
+        marginRight: '2%'
     },
     screenContainer: {
-        backgroundColor: '#9FC9FB', 
-        height:'100%'
+        backgroundColor: '#9FC9FB',
+        height: '100%'
     }
 })
 

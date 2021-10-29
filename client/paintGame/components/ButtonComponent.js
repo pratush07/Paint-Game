@@ -1,6 +1,10 @@
-import React from 'react'
-import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, Pressable, Image, Platform, ToastAndroid, Alert } from 'react-native';
 import { useFonts } from '@expo-google-fonts/inter';
+import * as Clipboard from 'expo-clipboard'
+import Toast from 'react-native-root-toast';
+import IoT from '../config/IoT';
+import axios from 'axios';
 
 const ButtonComponent = (props) => {
     let [fontsLoaded] = useFonts({
@@ -8,7 +12,7 @@ const ButtonComponent = (props) => {
     });
     if (!fontsLoaded) {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID, props.topicId)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text2}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -18,7 +22,7 @@ const ButtonComponent = (props) => {
     }
     else {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID, props.topicId)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -35,7 +39,7 @@ renderCopyLogo = (copyButton) => {
         />)
     }
 }
-onPressLearnMore = (text, navigation, toGame) => {
+onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userID, topicId) => {
     switch (text) {
         case "Create Room":
             // code for Room creation handler here
@@ -43,11 +47,63 @@ onPressLearnMore = (text, navigation, toGame) => {
             break;
         case "Join Room":
             if (toGame) {
-                // code for room joining check here
-                navigation.navigate("Game")
+                if (isOwner) {
+                    axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/start/room/", {
+                        room_id: roomID,
+                    })
+                        .then((response) => {
+                            navigation.navigate("Game", {topicId, roomID, userID})
+                        })
+                }
+                else {
+                    axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room/", {
+                        params: { room_id: randomText }
+                    })
+                        .then((response) => {
+                            if (response.data.data.status !== 'STARTED') {
+                                Alert.alert('Game has not Started. Please Wait!')
+                            }
+                            else {
+                                console.log(userID)
+                                axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/join/room/",
+                                    { 
+                                        user_id: userID,
+                                        room_id: randomText
+                                    })
+                                    .then((response) => {
+                                        axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
+                                        { 
+                                            params: {
+                                                user_id: userID
+                                            }
+                                        }).then(response => {
+                                            IoT.subscribe(response.data.Topic)
+                                            IoT.on('message', (topic, load) => {
+                                                console.log(topic)
+                                            })
+                                            navigation.navigate("Game", {topicId, randomText, userID})
+                                        })                                
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                    })
+                            }
+                        })
+                }
             } else {
-                navigation.navigate("Join")
-            }         
+                navigation.navigate("Join", { roomID, isOwner, topicId })
+            }
+            break;
+        case "Copy Code":
+            Clipboard.setString(randomText)
+            if (Platform.OS === 'ios') {
+                Toast.show(randomText + ' has been copyied!', {
+                    duration: Toast.durations.LONG
+                })
+            } else {
+                ToastAndroid.show(randomText + ' has been copyied!', ToastAndroid.LONG)
+            }
+
             break;
         default:
             break;

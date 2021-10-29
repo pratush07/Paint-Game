@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TextInput,StyleSheet } from 'react-native';
 import { useFonts } from '@expo-google-fonts/inter';
 
 export default function TextInputComponent(props) {
   const [name, setName] = React.useState(props.value);
+  useEffect(() => {
+    setName(props.value)
+  }, [props.value])
   let [fontsLoaded] = useFonts({
     'Revalia-Regular':require('../assets/fonts/Revalia-Regular.ttf'),
   });
