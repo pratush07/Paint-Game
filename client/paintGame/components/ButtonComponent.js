@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, Pressable, Image, Platform, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Image, Platform, ToastAndroid, Alert } from 'react-native';
 import { useFonts } from '@expo-google-fonts/inter';
 import * as Clipboard from 'expo-clipboard'
 import Toast from 'react-native-root-toast';
-import IoT from '../config/IoT'
+import IoT from '../config/IoT';
+import axios from 'axios';
 
 const ButtonComponent = (props) => {
     let [fontsLoaded] = useFonts({
@@ -11,7 +12,7 @@ const ButtonComponent = (props) => {
     });
     if (!fontsLoaded) {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.userID)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text2}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -21,7 +22,7 @@ const ButtonComponent = (props) => {
     }
     else {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.userID)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -38,7 +39,7 @@ renderCopyLogo = (copyButton) => {
         />)
     }
 }
-onPressLearnMore = (text, navigation, toGame, randomText) => {
+onPressLearnMore = (text, navigation, toGame, randomText, isOwner, userID) => {
     switch (text) {
         case "Create Room":
             // code for Room creation handler here
@@ -46,12 +47,38 @@ onPressLearnMore = (text, navigation, toGame, randomText) => {
             break;
         case "Join Room":
             if (toGame) {
-                // code for room joining check here
-                // get room
-                // if room status is started
-            
-                IoT.subscribe('roomtest-28')
-                navigation.navigate("Game")
+                if(isOwner){
+                    axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/start/room/",{ 
+                    "room_id": props.roomId,
+                    })
+                    .then((response) =>{
+                        navigation.navigate("Game")
+                    })
+                }
+                else
+                {
+                    axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room/",{ 
+                        params: { room_id: props.roomId } 
+                    })
+                    .then((response) => {
+                        if(response.data.status !== 'STARTED')
+                        {
+                            Alert.alert('Game has not Started. Please Wait!')
+                        }
+                        else
+                        {
+                            axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
+                            { params: { user_id: userID } })
+                            .then((response)=>{
+                                IoT.subscribe(response.data.topic)
+                                IoT.on('message', (topic, load) => {
+                                console.log(topic)
+                                })
+                                navigation.navigate("Game")
+                            })
+                        }
+                    })
+                }
             } else {
                 navigation.navigate("Join")
             }

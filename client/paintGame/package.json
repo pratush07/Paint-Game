@@ -16,6 +16,7 @@
     "asyncstorage-down": "^4.2.0",
     "aws-iot-device-sdk": "^2.2.11",
     "aws-sdk": "^2.1016.0",
+    "axios": "^0.24.0",
     "browserify": "^17.0.0",
     "buffer": "^4.9.1",
     "events": "^1.0.0",
@@ -36,8 +37,8 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-web": "~0.13.12",
     "readable-stream": "1.0.33",
-    "stream": "^0.0.2",
     "rn-nodeify": "^10.3.0",
+    "stream": "^0.0.2",
     "stream-browserify": "^1.0.0",
     "url": "~0.10.1",
     "util": "~0.10.3"
