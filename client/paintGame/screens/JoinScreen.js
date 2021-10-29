@@ -19,7 +19,7 @@ export default function JoinScreen({ navigation, route, userID }) {
     <>
       <ImageBackground style={styles.backGroundStyle} source={require('../assets/ScreenBG.png')}>
         <TextInputComponent editable={true} value={copiedText} />
-        <ButtonComponent text='Join Room' copyButton={false} randomText={copiedText} navigation={navigation} toGame={true} isOwner={route.params.isOwner} userID={userID} roomID={route.params.roomID}/>
+        <ButtonComponent text='Join Room' copyButton={false} randomText={copiedText} navigation={navigation} toGame={true} isOwner={route.params.isOwner} userID={userID} roomID={route.params.roomID} topicId = {route.params.topicId}/>
       </ImageBackground>
     </>
   );

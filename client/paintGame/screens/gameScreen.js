@@ -7,6 +7,7 @@ import BoardComponent from '../components/BoardComponent'
 import DotComponent from '../components/DotComponent'
 import React, { Component } from 'react'
 import IoT from '../config/IoT'
+import axios from 'axios'
 
 export default class GameScreen extends Component {
 
@@ -19,12 +20,19 @@ export default class GameScreen extends Component {
             dotY: 0,
             boardX: 50,
             boardY: 0,
-            boardPoints: []
+            boardPoints: [],
+            userInfo: []
         };
     }
     componentDidMount() {
-       
-        console.log(this.props.route.params)
+        console.log("TopicID in GameScreen:"+this.props.route.params.topicId)
+        axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room",{
+            params:{room_id: this.props.route.params.roomID}
+        })
+        .then(response =>{
+            this.setState({userInfo:response.data.data.user_info})
+        })
+
     }
     fireClicked = () => {
         cursorPoint = [this.state.dotX, this.state.dotY]
@@ -38,7 +46,7 @@ export default class GameScreen extends Component {
             markonBoardY = cursorPoint[1] - boardCord[1];
             // add publish
             IoT.publish(
-                'roomtest-28',
+                this.props.route.params.topicId,
                 JSON.stringify({
                     topic: this.props.route.params.topicId,
                     room_id: this.props.route.params.roomID,
@@ -100,10 +108,10 @@ export default class GameScreen extends Component {
     render() {
         return (
             <View style={styles.screenContainer}>
-                <ScoreBoardList />
+                <ScoreBoardList userInfo = {this.state.userInfo}/>
                 <View style={styles.boardContainer}>
-                    <BoardComponent getBoardCordinates={this.getBoardCordinates} boardPoints={this.state.boardPoints.length > 0 ? this.state.boardPoints : []} />
-                    <DotComponent dotX={this.state.dotX} dotY={this.state.dotY} />
+                    <BoardComponent getBoardCordinates={this.getBoardCordinates} userInfo = {this.state.userInfo} boardPoints={this.state.boardPoints.length > 0 ? this.state.boardPoints : []} />
+                    {this.state.userInfo.length>0 ? <DotComponent dotX={this.state.dotX} dotY={this.state.dotY} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} /> : (<></>)}
                 </View>
                 <View style={styles.panels}>
                     <ControlPanel direction={"up"} clicked={this.imageClicked} />

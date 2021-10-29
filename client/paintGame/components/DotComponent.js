@@ -7,8 +7,14 @@ export default class DotComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
-            x:200,
-            y:200
+            x:0,
+            y:0,
+            color:''
+        }
+        if(this.props.userInfo.length)
+        {
+            color = this.props.userInfo.filter(word => Object.keys(word)[0] == this.props.user_id)
+            //this.setState({color: Object.values(color[0])[0].toLowerCase()})
         }
     }
     // _onLayoutEvent = (event) =>
@@ -30,7 +36,7 @@ export default class DotComponent extends Component {
     {
         return (
             <View /* onLayout={this._onLayoutEvent} */ style = {{position:'absolute',top:this.state.y,left:this.state.x}}>
-                <FontAwesome name="crosshairs" size={config.deviceWidth * 0.06} color='red' />
+                <FontAwesome name="crosshairs" size={config.deviceWidth * 0.06} color= 'red' />
             </View>
         )
     }

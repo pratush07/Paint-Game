@@ -91,7 +91,7 @@ onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userI
                         })
                 }
             } else {
-                navigation.navigate("Join", { roomID, isOwner })
+                navigation.navigate("Join", { roomID, isOwner, topicId })
             }
             break;
         case "Copy Code":

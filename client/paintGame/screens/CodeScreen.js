@@ -25,18 +25,25 @@ export default class CodeScreen extends Component {
     })
     .then((response)=>{
       this.setState({roomID:response.data.id})
-      axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
-      { params: { user_id: this.state.userID } })
-      .then((response)=>{
-        this.setState({topicId:response.data.Topic})
-        IoT.subscribe(this.state.topicId)
-        IoT.on('message', (topic, load) => {
-          console.log(topic)
-        })
+      axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/join/room/",
+      {
+        user_id: this.state.userID,
+        room_id: this.state.roomID
       })
-      .catch(error =>
-        {
-        console.log(error)
+      .then((response)=>{
+        axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
+        { params: { user_id: this.state.userID } })
+        .then((response)=>{
+          this.setState({topicId:response.data.Topic})
+          IoT.subscribe(this.state.topicId)
+          // IoT.on('message', (topic, load) => {
+          //   console.log(topic)
+          // })
+        })
+        .catch(error =>
+          {
+          console.log(error)
+        })
       })
     })
     .catch(error =>{
