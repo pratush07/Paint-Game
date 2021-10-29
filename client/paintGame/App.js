@@ -17,30 +17,34 @@ const Stack = createStackNavigator()
 export default function App() {
   const [userID, setUserID] = useState("")
   useEffect(() => {
-    UniqueID = Math.ceil(Math.random()*100000);
+    UniqueID = Math.ceil(Math.random() * 100000);
     axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/create/user/",
-    { "mobile_num": UniqueID,
-    "name": "DummyName" })
-    .then((response)=>{
-      setUserID(response.data.id)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+      {
+        "mobile_num": UniqueID,
+        "name": "DummyName"
+      })
+      .then((response) => {
+        setUserID(response.data.id)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }, [userID])
 
   img = require('./assets/ScreenBG.png')
   return (
     <NavigationContainer style={styles.container}>
-      <Stack.Navigator 
+      <Stack.Navigator
         screenOptions={{
           headerShown: false
         }}
-        >
-        <Stack.Screen name="Main" component={MainScreen} userID = {userID}/>
-        <Stack.Screen name="Join" component={JoinScreen} userID = {userID}/>
-        <Stack.Screen name="Code" component={CodeScreen}  initialParams = {{userID : userID}}/>
-        <Stack.Screen name="Game" component={GameScreen} userID = {userID}/>
+      >
+        <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Screen name="Join">
+          {props => <JoinScreen {...props} userID={userID} />}
+        </Stack.Screen>
+        <Stack.Screen name="Code" component={CodeScreen} initialParams={{ userID: userID }} />
+        <Stack.Screen name="Game" component={GameScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

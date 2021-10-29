@@ -8,8 +8,8 @@ const device = awsIot.device({
     protocol: 'wss',
     maximumReconnectTimeMs: 5000,
     debug: true,
-    accessKeyId: '',
-    secretKey: '',
+    accessKeyId: 'AKIAVIVUHIM3YDFPFQGA',
+    secretKey: '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',
 })
 
 // use the exported device to access the following functions in the game component.

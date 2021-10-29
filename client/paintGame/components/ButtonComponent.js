@@ -12,7 +12,7 @@ const ButtonComponent = (props) => {
     });
     if (!fontsLoaded) {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.userID)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text2}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -22,7 +22,7 @@ const ButtonComponent = (props) => {
     }
     else {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.userID)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -39,7 +39,7 @@ renderCopyLogo = (copyButton) => {
         />)
     }
 }
-onPressLearnMore = (text, navigation, toGame, randomText, isOwner, userID) => {
+onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userID) => {
     switch (text) {
         case "Create Room":
             // code for Room creation handler here
@@ -47,40 +47,51 @@ onPressLearnMore = (text, navigation, toGame, randomText, isOwner, userID) => {
             break;
         case "Join Room":
             if (toGame) {
-                if(isOwner){
-                    axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/start/room/",{ 
-                    "room_id": props.roomId,
+                if (isOwner) {
+                    axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/start/room/", {
+                        room_id: roomID,
                     })
-                    .then((response) =>{
-                        navigation.navigate("Game")
-                    })
+                        .then((response) => {
+                            navigation.navigate("Game")
+                        })
                 }
-                else
-                {
-                    axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room/",{ 
-                        params: { room_id: props.roomId } 
+                else {
+                    axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room/", {
+                        params: { room_id: randomText }
                     })
-                    .then((response) => {
-                        if(response.data.status !== 'STARTED')
-                        {
-                            Alert.alert('Game has not Started. Please Wait!')
-                        }
-                        else
-                        {
-                            axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
-                            { params: { user_id: userID } })
-                            .then((response)=>{
-                                IoT.subscribe(response.data.topic)
-                                IoT.on('message', (topic, load) => {
-                                console.log(topic)
-                                })
-                                navigation.navigate("Game")
-                            })
-                        }
-                    })
+                        .then((response) => {
+                            if (response.data.data.status !== 'STARTED') {
+                                Alert.alert('Game has not Started. Please Wait!')
+                            }
+                            else {
+                                console.log(userID)
+                                axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/join/room/",
+                                    { 
+                                        user_id: userID,
+                                        room_id: randomText
+                                    })
+                                    .then((response) => {
+                                        axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
+                                        { 
+                                            params: {
+                                                user_id: userID
+                                            }
+                                        }).then(response => {
+                                            IoT.subscribe(response.data.Topic)
+                                            IoT.on('message', (topic, load) => {
+                                                console.log(topic)
+                                            })
+                                            navigation.navigate("Game")
+                                        })                                
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                    })
+                            }
+                        })
                 }
             } else {
-                navigation.navigate("Join")
+                navigation.navigate("Join", { roomID, isOwner })
             }
             break;
         case "Copy Code":
@@ -92,7 +103,7 @@ onPressLearnMore = (text, navigation, toGame, randomText, isOwner, userID) => {
             } else {
                 ToastAndroid.show(randomText + ' has been copyied!', ToastAndroid.LONG)
             }
-            
+
             break;
         default:
             break;

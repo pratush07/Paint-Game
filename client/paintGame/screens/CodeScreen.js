@@ -12,7 +12,7 @@ export default class CodeScreen extends Component {
     super(props);
     this.state = {
       roomID:0,
-      userID:props.userID,
+      userID:props.route.params.userID,
       topicId:''
     }
   }
@@ -24,7 +24,7 @@ export default class CodeScreen extends Component {
     name: "New Room" + this.state.userID
     })
     .then((response)=>{
-      this.setState({roomId:response.data.id})
+      this.setState({roomID:response.data.id})
       axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
       { params: { user_id: this.state.userID } })
       .then((response)=>{
@@ -47,9 +47,9 @@ export default class CodeScreen extends Component {
     return (
       <>
         <ImageBackground style = {styles.backGroundStyle} source = {require('../assets/ScreenBG.png')}>
-            <TextInputComponent editable = {false} value = {this.state.roomId+''} />
-            <ButtonComponent text = 'Copy Code' copyButton = {true} randomText={this.state.roomId+''}/>
-            <ButtonComponent text = 'Join Room' copyButton = {false} navigation={this.props.navigation} isOwner = {true} roomID = {this.state.roomID}/>
+            <TextInputComponent editable = {false} value = {this.state.roomID+''} />
+            <ButtonComponent text = 'Copy Code' copyButton = {true} randomText={this.state.roomID+''}/>
+            <ButtonComponent text = 'Join Room' copyButton = {false} navigation={this.props.navigation} roomID={this.state.roomID} isOwner={true}/>
         </ImageBackground>
     </>
     )
