@@ -49,7 +49,7 @@ export default class CodeScreen extends Component {
         <ImageBackground style = {styles.backGroundStyle} source = {require('../assets/ScreenBG.png')}>
             <TextInputComponent editable = {false} value = {this.state.roomID+''} />
             <ButtonComponent text = 'Copy Code' copyButton = {true} randomText={this.state.roomID+''}/>
-            <ButtonComponent text = 'Join Room' copyButton = {false} navigation={this.props.navigation} roomID={this.state.roomID} isOwner={true}/>
+            <ButtonComponent text = 'Join Room' copyButton = {false} navigation={this.props.navigation} roomID={this.state.roomID} isOwner={true} topicId={this.state.topicId} userID={this.state.userID} />
         </ImageBackground>
     </>
     )

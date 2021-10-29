@@ -12,7 +12,7 @@ const ButtonComponent = (props) => {
     });
     if (!fontsLoaded) {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID, props.topicId)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text2}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -22,7 +22,7 @@ const ButtonComponent = (props) => {
     }
     else {
         return (
-            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID)}>
+            <Pressable style={[styles.buttonStyle, styles.shadowProp]} onPress={() => onPressLearnMore(props.text, props.navigation, props.toGame, props.randomText, props.isOwner, props.roomID, props.userID, props.topicId)}>
                 <View style={styles.buttonContainer}>
                     <Text style={styles.text}>{props.text}</Text>
                     {renderCopyLogo(props.copyButton)}
@@ -39,7 +39,7 @@ renderCopyLogo = (copyButton) => {
         />)
     }
 }
-onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userID) => {
+onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userID, topicId) => {
     switch (text) {
         case "Create Room":
             // code for Room creation handler here
@@ -52,7 +52,7 @@ onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userI
                         room_id: roomID,
                     })
                         .then((response) => {
-                            navigation.navigate("Game")
+                            navigation.navigate("Game", {topicId, roomID, userID})
                         })
                 }
                 else {
@@ -81,7 +81,7 @@ onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userI
                                             IoT.on('message', (topic, load) => {
                                                 console.log(topic)
                                             })
-                                            navigation.navigate("Game")
+                                            navigation.navigate("Game", {topicId, randomText, userID})
                                         })                                
                                     })
                                     .catch(err => {

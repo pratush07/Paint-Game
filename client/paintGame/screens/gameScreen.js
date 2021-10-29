@@ -24,7 +24,7 @@ export default class GameScreen extends Component {
     }
     componentDidMount() {
        
-   
+        console.log(this.props.route.params)
     }
     fireClicked = () => {
         cursorPoint = [this.state.dotX, this.state.dotY]
@@ -40,10 +40,10 @@ export default class GameScreen extends Component {
             IoT.publish(
                 'roomtest-28',
                 JSON.stringify({
-                    topic: "roomtest-28",
-                    room_id: 28,
+                    topic: this.props.route.params.topicId,
+                    room_id: this.props.route.params.roomID,
                     eventType: "TRY",
-                    user_id: 26,
+                    user_id: this.props.route.params.userID,
                     x: markonBoardX,
                     y: markonBoardY,
                     timestamp: Date.now()
@@ -51,6 +51,7 @@ export default class GameScreen extends Component {
             )
             IoT.on('message', (topic, payload) => {
                 const json_payload = JSON.parse(payload.toString())
+                console.log(json_payload)
                 if (json_payload.eventType === 'HIT') {
                     this.setState({ boardPoints: this.state.boardPoints.concat([{ x: json_payload.x, y: json_payload.y }]) })
                 } 
