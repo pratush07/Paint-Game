@@ -21,18 +21,20 @@ export default class GameScreen extends Component {
             boardX: 50,
             boardY: 0,
             boardPoints: [],
-            userInfo: []
+            userInfo: [],
+            userScore: {}
         };
     }
     componentDidMount() {
         console.log("TopicID in GameScreen:"+this.props.route.params.topicId)
+        console.log("roomid in GameScreen:" + this.props.route.params.roomID)
         axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room",{
             params:{room_id: this.props.route.params.roomID}
         })
         .then(response =>{
             this.setState({userInfo:response.data.data.user_info})
+            Object.assign(this.state.userScore, response.data.data.coordinates)
         })
-
     }
     fireClicked = () => {
         cursorPoint = [this.state.dotX, this.state.dotY]
@@ -108,10 +110,10 @@ export default class GameScreen extends Component {
     render() {
         return (
             <View style={styles.screenContainer}>
-                <ScoreBoardList userInfo = {this.state.userInfo}/>
+                <ScoreBoardList userInfo = {this.state.userInfo} userScore={this.state.userScore}/>
                 <View style={styles.boardContainer}>
-                    <BoardComponent getBoardCordinates={this.getBoardCordinates} userInfo = {this.state.userInfo} boardPoints={this.state.boardPoints.length > 0 ? this.state.boardPoints : []} />
-                    {this.state.userInfo.length>0 ? <DotComponent dotX={this.state.dotX} dotY={this.state.dotY} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} /> : (<></>)}
+                    <BoardComponent getBoardCordinates={this.getBoardCordinates} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} boardPoints={this.state.boardPoints.length > 0 ? this.state.boardPoints : []} />
+                    <DotComponent dotX={this.state.dotX} dotY={this.state.dotY} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} />
                 </View>
                 <View style={styles.panels}>
                     <ControlPanel direction={"up"} clicked={this.imageClicked} />

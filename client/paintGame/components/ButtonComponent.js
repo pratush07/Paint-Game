@@ -52,7 +52,7 @@ onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userI
                         room_id: roomID,
                     })
                         .then((response) => {
-                            navigation.navigate("Game", {topicId, roomID, userID})
+                            navigation.navigate("Game", { topicId, roomID, userID })
                         })
                 }
                 else {
@@ -66,23 +66,24 @@ onPressLearnMore = (text, navigation, toGame, randomText, isOwner, roomID, userI
                             else {
                                 console.log(userID)
                                 axios.post("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/join/room/",
-                                    { 
+                                    {
                                         user_id: userID,
                                         room_id: randomText
                                     })
                                     .then((response) => {
                                         axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/room/",
-                                        { 
-                                            params: {
-                                                user_id: userID
-                                            }
-                                        }).then(response => {
-                                            IoT.subscribe(response.data.Topic)
-                                            IoT.on('message', (topic, load) => {
-                                                console.log(topic)
+                                            {
+                                                params: {
+                                                    user_id: userID
+                                                }
+                                            }).then(response => {
+                                                console.log(response.data)
+                                                IoT.subscribe(response.data.Topic)
+                                                IoT.on('message', (topic, load) => {
+                                                    console.log(topic)
+                                                })
+                                                navigation.navigate("Game", { topicId: response.data.Topic, roomID: parseInt(randomText), userID })
                                             })
-                                            navigation.navigate("Game", {topicId, randomText, userID})
-                                        })                                
                                     })
                                     .catch(err => {
                                         console.log(err)
