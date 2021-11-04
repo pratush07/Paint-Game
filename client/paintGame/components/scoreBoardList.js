@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, ColorPropType } from 'react-native'
 import ScoreBoard from './scoreBoard'
 import config from '../tools/dimensons'
@@ -8,30 +8,24 @@ const ScoreBoardList = (props) => {
     const [userColors, setuserColors] = useState([])
     const [userScore, setuserScore] = useState([])
     useEffect(() => {
-        var abc = [];
-        props.userInfo.map(usr => {
-            abc.push(Object.values(usr)[0].toLowerCase())})
-        setuserColors(abc)
-        if (Object.keys(props.userScore).length > 0) {
-            const coordinates = Object.values(props.userScore)
-            console.log(coordinates)
-            const scores = coordinates.map(arr => {
-                return arr.length
-            })
-            console.log(scores)
-            setuserScore(scores)
-        }
-        //setuserColors(Object.values(props.userInfo))
-    },[props.userInfo, props.userScore])
+        setuserColors(props.userInfo)
+        setuserScore(props.userScore)
+        console.log(userColors)
+        console.log(userScore)
+    }, [props.userInfo, props.userScore])
     return (
         <View style={styles.container}>
             <View style={styles.scoreBoardList}>
                 {
-                    userColors.map((color, index) => {
-                        return (
-                            <ScoreBoard key={index} color={color} score={userScore[index]} />
-                        )                       
-                    })
+                    userColors.map(user => (
+                        <ScoreBoard key={Object.keys(user)[0]} color={Object.values(user)[0].toLowerCase()} score={userScore[Object.keys(user)[0]] ? userScore[Object.keys(user)[0]].length : 0} />
+                    )
+                    )
+                    // userColors.map((color, index) => {
+                    //     return (
+                    //         <ScoreBoard key={index} color={color} score={userScore[index]} />
+                    //     )                       
+                    // })
                 }
             </View>
         </View>
