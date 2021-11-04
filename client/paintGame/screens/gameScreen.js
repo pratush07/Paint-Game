@@ -69,6 +69,13 @@ export default class GameScreen extends Component {
 
                 }
             })
+            axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room",{
+                params:{room_id: this.props.route.params.roomID}
+            })
+            .then(response =>{
+                this.setState({userInfo:response.data.data.user_info})
+                Object.assign(this.state.userScore, response.data.data.coordinates)
+            })
         }
         else
         {
