@@ -26,11 +26,20 @@ export default class GameScreen extends Component {
             boardPoints: [],
             userInfo: [],
             userScore: {},
-            localCord: [],
             showMask: false
         };
     }
     componentDidMount() {
+        IoT.on('message', (topic, payload) => {
+            const json_payload = JSON.parse(payload.toString())
+            console.log(json_payload)
+            if (json_payload.eventType === 'HIT') {
+                this.setState({ boardPoints: this.state.boardPoints.concat([{ x: json_payload.x, y: json_payload.y }])})
+            } 
+            if (json_payload.eventType === 'MISS') {
+
+            }
+        })
         console.log("TopicID in GameScreen:"+this.props.route.params.topicId)
         console.log("roomid in GameScreen:" + this.props.route.params.roomID)
         axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room",{
@@ -53,22 +62,6 @@ export default class GameScreen extends Component {
             markonBoardY = cursorPoint[1] - boardCord[1];
             // add publish
             this.publishHits(this.props.route.params.topicId,this.props.route.params.roomID,this.props.route.params.userID,markonBoardX,markonBoardY);
-            IoT.on('message', (topic, payload) => {
-                const json_payload = JSON.parse(payload.toString())
-                console.log(json_payload)
-                if (json_payload.eventType === 'HIT') {
-                    if(this.state.localCord.indexOf(json_payload.x+','+json_payload.y)>-1)
-                    {
-                        var removedElement = this.state.localCord;
-                        removedElement.pop(json_payload.x+','+json_payload.y)
-                        this.setState({ boardPoints: this.state.boardPoints.concat([{ x: json_payload.x, y: json_payload.y }]),
-                        localCord: removedElement })
-                    }
-                } 
-                if (json_payload.eventType === 'MISS') {
-
-                }
-            })
             axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room",{
                 params:{room_id: this.props.route.params.roomID}
             })
@@ -86,7 +79,6 @@ export default class GameScreen extends Component {
         }
     }
     publishHits = (topicId,roomID,userID,markonBoardX,markonBoardY)=>{
-        this.setState({localCord:this.state.localCord.concat(markonBoardX+','+markonBoardY)})
         IoT.publish(
             topicId,
             JSON.stringify({
