@@ -1,8 +1,8 @@
 const awsIot = require('aws-iot-device-sdk')
-const path = require('path');
+var uuid = require('uuid');
 
 const device = awsIot.device({
-    clientId: 'sdk-nodejs-6b9354d5-ff70-498f-83fb-e58595112157',
+    clientId: uuid.v1().toString(),
     host: 'a2zb0fmjrgjgl3-ats.iot.eu-west-1.amazonaws.com',
     region: 'eu-west-1',
     protocol: 'wss',
