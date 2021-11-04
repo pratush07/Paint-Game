@@ -1,13 +1,15 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Alert } from 'react-native'
 import ScoreBoardList from '../components/scoreBoardList'
 import ControlPanel from '../components/controlPanel'
 import FirePanel from '../components/firePanel'
 import config from '../tools/dimensons'
 import BoardComponent from '../components/BoardComponent'
 import DotComponent from '../components/DotComponent'
+import MaskComponent from '../components/maskComponent'
 import React, { Component } from 'react'
 import IoT from '../config/IoT'
 import axios from 'axios'
+import debounce from 'lodash.debounce';
 
 export default class GameScreen extends Component {
 
@@ -15,6 +17,7 @@ export default class GameScreen extends Component {
         super(props);
         this.imageClicked = this.imageClicked.bind(this)
         this.fireClicked = this.fireClicked.bind(this)
+        this.publishHits = this.publishHits.bind(this)
         this.state = {
             dotX: 0,
             dotY: 0,
@@ -22,7 +25,9 @@ export default class GameScreen extends Component {
             boardY: 0,
             boardPoints: [],
             userInfo: [],
-            userScore: {}
+            userScore: {},
+            localCord: [],
+            showMask: false
         };
     }
     componentDidMount() {
@@ -47,30 +52,54 @@ export default class GameScreen extends Component {
             markonBoardX = cursorPoint[0] - boardCord[0];
             markonBoardY = cursorPoint[1] - boardCord[1];
             // add publish
-            IoT.publish(
-                this.props.route.params.topicId,
-                JSON.stringify({
-                    topic: this.props.route.params.topicId,
-                    room_id: this.props.route.params.roomID,
-                    eventType: "TRY",
-                    user_id: this.props.route.params.userID,
-                    x: markonBoardX,
-                    y: markonBoardY,
-                    timestamp: Date.now()
-                })
-            )
+            this.publishHits(this.props.route.params.topicId,this.props.route.params.roomID,this.props.route.params.userID,markonBoardX,markonBoardY);
             IoT.on('message', (topic, payload) => {
                 const json_payload = JSON.parse(payload.toString())
                 console.log(json_payload)
                 if (json_payload.eventType === 'HIT') {
-                    this.setState({ boardPoints: this.state.boardPoints.concat([{ x: json_payload.x, y: json_payload.y }]) })
+                    if(this.state.localCord.indexOf(json_payload.x+','+json_payload.y)>-1)
+                    {
+                        var removedElement = this.state.localCord;
+                        removedElement.pop(json_payload.x+','+json_payload.y)
+                        this.setState({ boardPoints: this.state.boardPoints.concat([{ x: json_payload.x, y: json_payload.y }]),
+                        localCord: removedElement })
+                    }
                 } 
                 if (json_payload.eventType === 'MISS') {
 
                 }
             })
+            axios.get("https://7xlajwnbpa.execute-api.eu-west-1.amazonaws.com/prod/api/info/room",{
+                params:{room_id: this.props.route.params.roomID}
+            })
+            .then(response =>{
+                this.setState({userInfo:response.data.data.user_info})
+                Object.assign(this.state.userScore, response.data.data.coordinates)
+            })
+        }
+        else
+        {
+            this.setState({showMask:true})
+            setTimeout(()=>{
+                this.setState({showMask:false})
+            },3000)
         }
     }
+    publishHits = (topicId,roomID,userID,markonBoardX,markonBoardY)=>{
+        this.setState({localCord:this.state.localCord.concat(markonBoardX+','+markonBoardY)})
+        IoT.publish(
+            topicId,
+            JSON.stringify({
+                topic: topicId,
+                room_id: roomID,
+                eventType: "TRY",
+                user_id: userID,
+                x: markonBoardX,
+                y: markonBoardY,
+                timestamp: Date.now()
+            })
+        )
+    };
     getBoardCordinates = (Cord, boardDim) => {
         this.setState({
             boardX: Cord[1],
@@ -114,6 +143,8 @@ export default class GameScreen extends Component {
                 <View style={styles.boardContainer}>
                     <BoardComponent getBoardCordinates={this.getBoardCordinates} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} boardPoints={this.state.boardPoints.length > 0 ? this.state.boardPoints : []} />
                     <DotComponent dotX={this.state.dotX} dotY={this.state.dotY} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} />
+                    {/* {this.state.userInfo.length > 0 ? <DotComponent dotX={this.state.dotX} dotY={this.state.dotY} userInfo = {this.state.userInfo} user_id = {this.props.route.params.userID} />:<></>} */}
+                    {this.state.showMask?<MaskComponent />:<></>}
                 </View>
                 <View style={styles.panels}>
                     <ControlPanel direction={"up"} clicked={this.imageClicked} />
